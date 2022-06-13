@@ -32,10 +32,10 @@ jobs:
               echo "Checking $DIR"
               terraform fmt -list=true -recursive -check -no-color $DIR
               exit_code=$?
-              if [ exit_code -ne 0 ]; then
+              if [ $exit_code -ne 0 ]; then
                 exit_code=1
               fi
-              exit exit_code
+              exit $exit_code
             done
           else
             echo "Nothing to check"
