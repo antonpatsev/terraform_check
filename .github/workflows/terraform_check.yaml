@@ -27,16 +27,23 @@ jobs:
 
           if [[ $FILES ]]; then
             DIRS=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '\.(tf|tfvars)$' | xargs dirname | uniq | xargs)
-            exit_code=0
-            for DIR in $DIRS; do
+            error=0
+            for DIR in "${DIRS[@]}";
+            do
               echo "Checking $DIR"
-              terraform fmt -list=true -recursive -check -no-color $DIR
-              exit_code=$?
-              if [ $exit_code -ne 0 ]; then
-                exit_code=1
+              set +e
+              fmt_output=$(terraform fmt -list=true -recursive -check -no-color $DIR 2>&1)
+              fmt_code=$?
+              set -e
+
+              if [ $fmt_code -ne 0 ]; then
+                error=1
+                echo $fmt_output
               fi
-              exit $exit_code
             done
+            if [ $error -ne 0 ]; then
+              exit 1
+            fi
           else
             echo "Nothing to check"
           fi
