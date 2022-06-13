@@ -27,22 +27,22 @@ jobs:
 
           if [[ $FILES ]]; then
             DIRS=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '\.(tf|tfvars)$' | xargs dirname | uniq | xargs)
-            error=0
+            ERROR=0
             for DIR in $DIRS;
             do
               echo "Checking $DIR"
               set +e
-              fmt_output=$(terraform fmt -list=true -recursive -check -no-color $DIR 2>&1)
-              fmt_code=$?
+              FMT_OUTPUT=$(terraform fmt -list=true -recursive -check -no-color $DIR 2>&1)
+              FMT_CODE=$?
               set -e
 
-              if [ $fmt_code -ne 0 ]; then
-                error=1
+              if [ $FMT_CODE -ne 0 ]; then
+                ERROR=1
                 echo "Incorrect fmt format:"
-                echo $fmt_output
+                echo $FMT_OUTPUT
               fi
             done
-            if [ $error -ne 0 ]; then
+            if [ $ERROR -ne 0 ]; then
               exit 1
             fi
           else
