@@ -38,6 +38,7 @@ jobs:
 
               if [ $fmt_code -ne 0 ]; then
                 error=1
+                echo "Incorrect fmt format:"
                 echo $fmt_output
               fi
             done
