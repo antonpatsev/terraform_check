@@ -21,9 +21,9 @@ jobs:
           set -o nounset   # fail if var undefined
           set -o noclobber # don't overwrite exists files via >
           set -o pipefail  # fails if pipes (|) fails
+          set -o errexit   # exit on error
 
           FILES=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '\.(tf|tfvars)$' | xargs)
-          set -o errexit   # exit on error
 
           if [[ $FILES ]]; then
             DIRS=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '\.(tf|tfvars)$' | xargs dirname | uniq | xargs)

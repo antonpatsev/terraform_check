@@ -1,4 +1,3 @@
 resource "google_compute_network" "vpc_network" {
-  name = "terraform-network"
-  aafff= "hhhh"
+  name = "terraform-networ"
 }
